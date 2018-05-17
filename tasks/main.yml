@@ -18,7 +18,7 @@
     module: slack
     token: "{{ slack_token }}"
     msg: |
-      [ sync {{ 'completed' if item is succeeded else 'failed' }} ]\t{{ item.item.src }} => {{ item.item.dest }}
+      [ sync {{ 'completed' if item is succeeded else 'failed' }} ]  {{ item.item.src }} => {{ item.item.dest }}
     color: "{{ 'good' if item is succeeded else 'danger' }}"
     channel: "#{{ slack_channel }}"
     username: "{{ ansible_user }}@{{ inventory_hostname }}"
