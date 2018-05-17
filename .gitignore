@@ -1,0 +1,4 @@
+*.retry
+.python-version
+hosts
+sync.yml

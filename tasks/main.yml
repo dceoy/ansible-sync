@@ -1,0 +1,26 @@
+---
+- name: Synchronize data
+  when:
+    - sync_targets is defined
+    - inventory_hostname == item.hostname
+  become: true
+  synchronize: "{{ item.synchronize }}"
+  delegate_to: "{{ item.delegate_to }}"
+  with_items: "{{ sync_targets }}"
+  register: data_sync
+  ignore_errors: true
+
+- name: Notify sync via Slack
+  when:
+    - data_sync is defined
+    - item is not skipped
+  local_action:
+    module: slack
+    token: "{{ slack_token }}"
+    msg: |
+      [ sync {{ 'completed' if item is succeeded else 'failed' }} ]\t{{ item.item.src }} => {{ item.item.dest }}
+    color: "{{ 'good' if item is succeeded else 'danger' }}"
+    channel: "#{{ slack_channel }}"
+    username: "{{ ansible_user }}@{{ inventory_hostname }}"
+    icon_url: "{{ slack_icon_url }}"
+  with_items: "{{ data_sync.results }}"

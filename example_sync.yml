@@ -1,0 +1,33 @@
+---
+- name: Synchronize data
+  hosts:
+    - target1
+    - target2
+    - target3
+  vars:
+    sync_targets:
+      - hostname: target1
+        synchronize:
+          src: some/relative/path
+          dest: /some/absolute/path
+          delete: yes
+        delegate_to: target1
+      - hostname: target1
+        synchronize:
+          mode: pull
+          src: rsync://somehost.com/path/
+          dest: /some/absolute/path/
+          compress: yes
+          delete: yes
+        delegate_to: target2
+      - hostname: target1
+        synchronize:
+          src: /some/absolute/path/
+          dest: rsync://somehost.com/path/
+          compress: yes
+          delete: yes
+        delegate_to: target3
+  environment:
+    https_proxy: https://example.proxy.com:8080/
+  tasks:
+    - import_tasks: tasks/main.yml
