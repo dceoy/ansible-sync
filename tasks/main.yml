@@ -4,8 +4,13 @@
     - sync_targets is defined
     - inventory_hostname == item.hostname
   become: true
-  synchronize: "{{ item.synchronize }}"
-  delegate_to: "{{ item.delegate_to }}"
+  synchronize:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    archive: "{{ item.archive if item.archive is defined else 'yes' }}"
+    compress: "{{ item.compress if item.compress is defined else 'yes' }}"
+    delete: "{{ item.delete if item.delete is defined else 'no' }}"
+  delegate_to: "{{ item.delegate_to if item.delegate_to is defined else item.hostname }}"
   with_items: "{{ sync_targets }}"
   register: data_sync
   ignore_errors: true
@@ -18,7 +23,7 @@
     module: slack
     token: "{{ slack_token }}"
     msg: |
-      [ sync {{ 'completed' if item is succeeded else 'failed' }} ]  {{ item.item.src }} => {{ item.item.dest }}
+      [ sync {{ 'completed' if item is succeeded else 'failed' }} ]    {{ item.item.src }} => {{ item.item.dest }}
     color: "{{ 'good' if item is succeeded else 'danger' }}"
     channel: "#{{ slack_channel }}"
     username: "{{ ansible_user }}@{{ inventory_hostname }}"
