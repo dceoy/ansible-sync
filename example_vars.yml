@@ -1,0 +1,16 @@
+---
+sync_targets:
+  - hostname: target1
+    src: /first/absolute/path
+    dest: /second/absolute/path
+    archive: yes
+    delete: yes
+    compress: no
+    delegate_to: target1
+  - hostname: target2
+    src: /some/absolute/path/
+    dest: rsync://somehost.com/path/
+    archive: yes
+    delete: yes
+    compress: yes
+    delegate_to: target2

@@ -1,4 +1,4 @@
 *.retry
 .python-version
 hosts
-sync.yml
+vars.yml

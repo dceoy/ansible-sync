@@ -1,0 +1,11 @@
+---
+- name: Synchronize data
+  hosts:
+    - target1
+    - target2
+  vars_files:
+    - vars.yml
+  environment:
+    https_proxy: "{{ http_proxy }}"
+  tasks:
+    - import_tasks: tasks/main.yml
