@@ -20,6 +20,8 @@
   when:
     - data_sync is defined
     - item is not skipped
+  environment:
+    https_proxy: "{{ http_proxy if http_proxy is defined else '' }}"
   local_action:
     module: slack
     token: "{{ slack_token }}"
